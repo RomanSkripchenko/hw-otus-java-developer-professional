@@ -21,3 +21,4 @@ pluginManagement {
     }
 }
 include("hw01-gradle")
+include("hm04-generics")
