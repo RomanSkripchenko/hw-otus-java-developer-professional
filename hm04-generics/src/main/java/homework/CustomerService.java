@@ -1,10 +1,11 @@
 package homework;
 
 import java.util.Map;
+import java.util.NavigableMap;
 import java.util.TreeMap;
 
 public class CustomerService {
-    private final TreeMap<Customer, String> customerMap = new TreeMap<>();
+    private final NavigableMap<Customer, String> customerMap = new TreeMap<>();
 
     public void add(Customer customer, String data) {
         customerMap.put(new Customer(customer.getId(), customer.getName(), customer.getScores()), data);
