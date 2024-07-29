@@ -1,40 +1,16 @@
+package homework;
+
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
 
 public class TestRunner {
 
-    public static void main(String[] args) {
-        if (args.length != 1) {
-            System.out.println("Please provide the test class name");
-            return;
-        }
-
-        String testClassName = args[0];
-
-        try {
-            Class<?> testClass = Class.forName(testClassName);
-            runTests(testClass);
-        } catch (ClassNotFoundException e) {
-            System.out.println("Test class not found: " + testClassName);
-        }
-    }
-
-    private static void runTests(Class<?> testClass) {
-        Method[] methods = testClass.getDeclaredMethods();
+    public static void runTests(Class<?> testClass) {
         List<Method> beforeMethods = new ArrayList<>();
         List<Method> testMethods = new ArrayList<>();
         List<Method> afterMethods = new ArrayList<>();
-
-        for (Method method : methods) {
-            if (method.isAnnotationPresent(Before.class)) {
-                beforeMethods.add(method);
-            } else if (method.isAnnotationPresent(Test.class)) {
-                testMethods.add(method);
-            } else if (method.isAnnotationPresent(After.class)) {
-                afterMethods.add(method);
-            }
-        }
+        categorizeMethods(testClass, beforeMethods, testMethods, afterMethods);
 
         int totalTests = testMethods.size();
         int passedTests = 0;
@@ -44,21 +20,21 @@ public class TestRunner {
             try {
                 Object testInstance = testClass.getDeclaredConstructor().newInstance();
 
-                for (Method beforeMethod : beforeMethods) {
-                    beforeMethod.invoke(testInstance);
-                }
+                boolean beforeSuccess = executeMethods(beforeMethods, testInstance);
 
-                try {
-                    testMethod.invoke(testInstance);
-                    passedTests++;
-                } catch (Exception e) {
-                    System.out.println("Test failed: " + testMethod.getName());
+                if (beforeSuccess) {
+                    try {
+                        testMethod.invoke(testInstance);
+                        passedTests++;
+                    } catch (Exception e) {
+                        System.out.println("Test failed: " + testMethod.getName());
+                        failedTests++;
+                    }
+                } else {
                     failedTests++;
                 }
 
-                for (Method afterMethod : afterMethods) {
-                    afterMethod.invoke(testInstance);
-                }
+                executeMethods(afterMethods, testInstance);
 
             } catch (Exception e) {
                 System.out.println("Error running test: " + testMethod.getName());
@@ -66,6 +42,34 @@ public class TestRunner {
             }
         }
 
+        printTestSummary(totalTests, passedTests, failedTests);
+    }
+
+    private static void categorizeMethods(Class<?> testClass, List<Method> beforeMethods, List<Method> testMethods, List<Method> afterMethods) {
+        for (Method method : testClass.getDeclaredMethods()) {
+            if (method.isAnnotationPresent(Before.class)) {
+                beforeMethods.add(method);
+            } else if (method.isAnnotationPresent(Test.class)) {
+                testMethods.add(method);
+            } else if (method.isAnnotationPresent(After.class)) {
+                afterMethods.add(method);
+            }
+        }
+    }
+
+    private static boolean executeMethods(List<Method> methods, Object instance) {
+        for (Method method : methods) {
+            try {
+                method.invoke(instance);
+            } catch (Exception e) {
+                System.out.println("Error executing method: " + method.getName());
+                return false;
+            }
+        }
+        return true;
+    }
+
+    private static void printTestSummary(int totalTests, int passedTests, int failedTests) {
         System.out.println("Total tests: " + totalTests);
         System.out.println("Passed tests: " + passedTests);
         System.out.println("Failed tests: " + failedTests);

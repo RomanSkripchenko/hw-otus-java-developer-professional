@@ -1,3 +1,5 @@
+package homework;
+
 public class MyTestClass {
 
     @Before
