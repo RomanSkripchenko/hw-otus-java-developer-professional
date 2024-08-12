@@ -4,10 +4,9 @@ import demo.generics.bounds.entries.Animal;
 import demo.generics.bounds.entries.Cat;
 import demo.generics.bounds.entries.HomeCat;
 import demo.generics.bounds.entries.WildCat;
+import java.util.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import java.util.*;
 
 public class ArrayListDemo {
     private static final Logger logger = LoggerFactory.getLogger(ArrayListDemo.class);

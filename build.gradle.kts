@@ -106,6 +106,14 @@ subprojects {
             html.required.set(true)
         }
     }
+
+    tasks.withType<Jar> {
+        manifest {
+            attributes(
+                "Main-Class" to "ru.calculator.CalcDemo"
+            )
+        }
+    }
 }
 
 tasks {

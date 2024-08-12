@@ -14,7 +14,12 @@ public class CustomerService {
     public Map.Entry<Customer, String> getSmallest() {
         Map.Entry<Customer, String> entry = customerMap.firstEntry();
         if (entry != null) {
-            return Map.entry(new Customer(entry.getKey().getId(), entry.getKey().getName(), entry.getKey().getScores()), entry.getValue());
+            return Map.entry(
+                    new Customer(
+                            entry.getKey().getId(),
+                            entry.getKey().getName(),
+                            entry.getKey().getScores()),
+                    entry.getValue());
         }
         return null;
     }
@@ -22,7 +27,12 @@ public class CustomerService {
     public Map.Entry<Customer, String> getNext(Customer customer) {
         Map.Entry<Customer, String> entry = customerMap.higherEntry(customer);
         if (entry != null) {
-            return Map.entry(new Customer(entry.getKey().getId(), entry.getKey().getName(), entry.getKey().getScores()), entry.getValue());
+            return Map.entry(
+                    new Customer(
+                            entry.getKey().getId(),
+                            entry.getKey().getName(),
+                            entry.getKey().getScores()),
+                    entry.getValue());
         }
         return null;
     }
