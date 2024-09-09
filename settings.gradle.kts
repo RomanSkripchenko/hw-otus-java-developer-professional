@@ -22,6 +22,10 @@ pluginManagement {
 }
 include("hw01-gradle")
 include("hm04-generics")
+include("hm06-annotations")
+include("hm06-annotations")
+include("hm8-garbage-collector")
+include("hw8-garbage-collector")
 include("10-byte-code")
 include("10-byte-code:main")
 findProject(":10-byte-code:main")?.name = "main"
