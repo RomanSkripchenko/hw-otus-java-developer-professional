@@ -8,16 +8,19 @@ import ru.otus.processor.LoggerProcessor;
 import ru.otus.processor.ProcessorConcatFields;
 import ru.otus.processor.ProcessorExceptionOnEvenSecond;
 import ru.otus.processor.ProcessorSwapFields11And12;
+import ru.otus.processor.homework.DateTimeProvider;
+import ru.otus.processor.homework.LocalDateTimeProvider;
 
 import java.util.List;
 
 public class HomeWork {
 
     public static void main(String[] args) {
+        DateTimeProvider dateTimeProvider = new LocalDateTimeProvider();
         var processors = List.of(
                 new ProcessorSwapFields11And12(),
                 new LoggerProcessor(new ProcessorConcatFields()),
-                new ProcessorExceptionOnEvenSecond()
+                new ProcessorExceptionOnEvenSecond(dateTimeProvider)
         );
 
         var complexProcessor = new ComplexProcessor(processors, ex -> {

@@ -7,13 +7,16 @@ import ru.otus.listener.Listener;
 import ru.otus.model.Message;
 
 public class HistoryListener implements Listener, HistoryReader {
-    private final Map<Long, Message> history = new HashMap<>(); // Инициализация поля history
+    private final Map<Long, Message> history = new HashMap<>();
 
     @Override
     public void onUpdated(Message msg) {
-        history.put(msg.getId(), msg.toBuilder().build()); // Сохраняем копию сообщения
+        history.put(msg.getId(), copyMessage(msg)); // Используем метод копирования
     }
 
+    private Message copyMessage(Message msg) {
+        return msg.deepCopy(); // Используем глубокое копирование
+    }
     @Override
     public Optional<Message> findMessageById(long id) {
         return Optional.ofNullable(history.get(id)); // Возвращаем сообщение по id

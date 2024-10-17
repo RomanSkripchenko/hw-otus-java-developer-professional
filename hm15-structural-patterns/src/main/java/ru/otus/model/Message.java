@@ -1,5 +1,8 @@
 package ru.otus.model;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @SuppressWarnings({"java:S107", "java:S1135"})
 public class Message {
     private final long id;
@@ -17,7 +20,6 @@ public class Message {
     private final String field12; // новое поле
     private final ObjectForMessage field13; // новое поле
 
-    // Добавлены новые параметры в конструктор
     private Message(
             long id,
             String field1,
@@ -49,7 +51,7 @@ public class Message {
         this.field13 = field13;
     }
 
-    // Геттеры для новых полей
+    // Геттеры
     public long getId() {
         return id;
     }
@@ -112,7 +114,6 @@ public class Message {
         if (o == null || getClass() != o.getClass()) return false;
 
         Message message = (Message) o;
-
         return id == message.id;
     }
 
@@ -121,27 +122,50 @@ public class Message {
         return (int) (id ^ (id >>> 32));
     }
 
-    public Builder toBuilder() {
-        return new Builder(id, field1, field2, field3, field4, field5, field6, field7, field8, field9, field10, field11, field12, field13);
-    }
-
     @Override
     public String toString() {
-        return "Message{" + "id="
-                + id + ", field1='"
-                + field1 + '\'' + ", field2='"
-                + field2 + '\'' + ", field3='"
-                + field3 + '\'' + ", field4='"
-                + field4 + '\'' + ", field5='"
-                + field5 + '\'' + ", field6='"
-                + field6 + '\'' + ", field7='"
-                + field7 + '\'' + ", field8='"
-                + field8 + '\'' + ", field9='"
-                + field9 + '\'' + ", field10='"
-                + field10 + '\'' + ", field11='"
-                + field11 + '\'' + ", field12='"
-                + field12 + '\'' + ", field13="
-                + field13 + '}';
+        return "Message{" + "id=" + id
+                + ", field1='" + field1 + '\''
+                + ", field2='" + field2 + '\''
+                + ", field3='" + field3 + '\''
+                + ", field4='" + field4 + '\''
+                + ", field5='" + field5 + '\''
+                + ", field6='" + field6 + '\''
+                + ", field7='" + field7 + '\''
+                + ", field8='" + field8 + '\''
+                + ", field9='" + field9 + '\''
+                + ", field10='" + field10 + '\''
+                + ", field11='" + field11 + '\''
+                + ", field12='" + field12 + '\''
+                + ", field13=" + field13 + '}';
+    }
+
+    // Метод для глубокого копирования
+    public Message deepCopy() {
+        ObjectForMessage newField13 = new ObjectForMessage();
+        if (this.field13 != null && this.field13.getData() != null) {
+            newField13.setData(new ArrayList<>(this.field13.getData()));
+        }
+
+        return new Message.Builder(this.id)
+                .field1(this.field1)
+                .field2(this.field2)
+                .field3(this.field3)
+                .field4(this.field4)
+                .field5(this.field5)
+                .field6(this.field6)
+                .field7(this.field7)
+                .field8(this.field8)
+                .field9(this.field9)
+                .field10(this.field10)
+                .field11(this.field11)
+                .field12(this.field12)
+                .field13(newField13)
+                .build();
+    }
+
+    public Builder toBuilder() {
+        return new Builder(id, field1, field2, field3, field4, field5, field6, field7, field8, field9, field10, field11, field12, field13);
     }
 
     public static class Builder {
@@ -156,15 +180,14 @@ public class Message {
         private String field8;
         private String field9;
         private String field10;
-        private String field11; // новое поле
-        private String field12; // новое поле
-        private ObjectForMessage field13; // новое поле
+        private String field11;
+        private String field12;
+        private ObjectForMessage field13;
 
         public Builder(long id) {
             this.id = id;
         }
 
-        // Добавлены новые параметры в конструктор
         private Builder(
                 long id,
                 String field1,
@@ -246,7 +269,6 @@ public class Message {
             return this;
         }
 
-        // Новые методы для установки значений
         public Builder field11(String field11) {
             this.field11 = field11;
             return this;
