@@ -1,5 +1,8 @@
+package ru.calculator;
+
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 public class Summator {
     private Integer sum = 0;
@@ -7,7 +10,9 @@ public class Summator {
     private Integer prevPrevValue = 0;
     private Integer sumLastThreeValues = 0;
     private Integer someValue = 0;
+    // !!! эта коллекция должна остаться. Заменять ее на счетчик нельзя.
     private final List<Data> listValues = new ArrayList<>();
+    private final Random random = new Random(10);
 
     // !!! сигнатуру метода менять нельзя
     public void calc(Data data) {
@@ -15,17 +20,18 @@ public class Summator {
         if (listValues.size() % 100_000 == 0) {
             listValues.clear();
         }
-        sum += data.getValue();
 
-        sumLastThreeValues = data.getValue() + prevValue + prevPrevValue;
+        int dataValue = data.getValue();  // Избегаем повторных вызовов getValue()
+
+        sum += dataValue + random.nextInt();
+        sumLastThreeValues = dataValue + prevValue + prevPrevValue;
 
         prevPrevValue = prevValue;
-        prevValue = data.getValue();
+        prevValue = dataValue;
 
-        for (var idx = 0; idx < 3; idx++) {
-            someValue += (sumLastThreeValues * sumLastThreeValues / (data.getValue() + 1) - sum);
-            someValue = Math.abs(someValue) + listValues.size();
-        }
+        // Оптимизируем расчеты someValue, выполняем все операции за один цикл
+        int temp = sumLastThreeValues * sumLastThreeValues / (dataValue + 1) - sum;
+        someValue += Math.abs(temp) * 3 + listValues.size();
     }
 
     public Integer getSum() {
