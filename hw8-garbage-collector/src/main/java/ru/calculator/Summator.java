@@ -10,26 +10,28 @@ public class Summator {
     private Integer prevPrevValue = 0;
     private Integer sumLastThreeValues = 0;
     private Integer someValue = 0;
-    // !!! эта коллекция должна остаться. Заменять ее на счетчик нельзя.
+    // Эта коллекция должна остаться, чтобы симулировать реальное использование данных
     private final List<Data> listValues = new ArrayList<>();
     private final Random random = new Random(10);
 
-    // !!! сигнатуру метода менять нельзя
     public void calc(Data data) {
         listValues.add(data);
+
+        // Очищаем коллекцию, чтобы уменьшить объем памяти, занимаемой объектами
         if (listValues.size() % 100_000 == 0) {
             listValues.clear();
         }
 
-        int dataValue = data.getValue();  // Избегаем повторных вызовов getValue()
+        int dataValue = data.getValue();
 
+        // Суммируем данные
         sum += dataValue + random.nextInt();
         sumLastThreeValues = dataValue + prevValue + prevPrevValue;
 
         prevPrevValue = prevValue;
         prevValue = dataValue;
 
-        // Оптимизируем расчеты someValue, выполняем все операции за один цикл
+        // Оптимизируем someValue, делая расчет за один цикл
         int temp = sumLastThreeValues * sumLastThreeValues / (dataValue + 1) - sum;
         someValue += Math.abs(temp) * 3 + listValues.size();
     }

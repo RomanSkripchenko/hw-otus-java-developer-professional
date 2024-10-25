@@ -1,6 +1,6 @@
 package ru.calculator;
 
-ublic class Data {
+public class Data {
     private final Integer value;
 
     public Data(Integer value) {
