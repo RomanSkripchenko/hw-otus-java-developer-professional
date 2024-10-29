@@ -38,26 +38,27 @@ public abstract class AbstractHibernateTest {
 
     @BeforeEach
     public void setUp() {
-       /* String dbUrl = System.getProperty("app.datasource.demo-db.jdbcUrl");
+        // Получаем URL базы данных и удаляем параметр loggerLevel=OFF, если он присутствует
+        String dbUrl = System.getProperty("app.datasource.demo-db.jdbcUrl").replace("?loggerLevel=OFF", "");
         String dbUserName = System.getProperty("app.datasource.demo-db.username");
-        String dbPassword = System.getProperty("app.datasource.demo-db.password");*/
-        String dbUrl = "jdbc:postgresql://localhost:5430/demoDB";
-        String dbUserName = "usr";
-        String dbPassword = "pwd";
+        String dbPassword = System.getProperty("app.datasource.demo-db.password");
+
+        // Выполняем миграции
         var migrationsExecutor = new MigrationsExecutorFlyway(dbUrl, dbUserName, dbPassword);
         migrationsExecutor.executeMigrations();
 
+        // Настраиваем Hibernate
         Configuration configuration = new Configuration().configure(HIBERNATE_CFG_FILE);
         configuration.setProperty("hibernate.connection.url", dbUrl);
         configuration.setProperty("hibernate.connection.username", dbUserName);
         configuration.setProperty("hibernate.connection.password", dbPassword);
 
         sessionFactory = HibernateUtils.buildSessionFactory(configuration, Client.class);
-
         transactionManager = new TransactionManagerHibernate(sessionFactory);
         clientTemplate = new DataTemplateHibernate<>(Client.class);
         dbServiceClient = new DbServiceClientImpl(transactionManager, clientTemplate);
     }
+
 
     protected EntityStatistics getUsageStatistics() {
         Statistics stats = sessionFactory.getStatistics();
