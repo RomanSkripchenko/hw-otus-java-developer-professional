@@ -5,19 +5,17 @@ import java.util.List;
 import java.util.Random;
 
 public class Summator {
-    private Integer sum = 0;
-    private Integer prevValue = 0;
-    private Integer prevPrevValue = 0;
-    private Integer sumLastThreeValues = 0;
-    private Integer someValue = 0;
-    // Эта коллекция должна остаться, чтобы симулировать реальное использование данных
+    private int sum = 0;  // Заменили Integer на int
+    private int prevValue = 0;  // Заменили Integer на int
+    private int prevPrevValue = 0;  // Заменили Integer на int
+    private int sumLastThreeValues = 0;  // Заменили Integer на int
+    private int someValue = 0;  // Заменили Integer на int
     private final List<Data> listValues = new ArrayList<>();
     private final Random random = new Random(10);
 
     public void calc(Data data) {
         listValues.add(data);
 
-        // Очищаем коллекцию, чтобы уменьшить объем памяти, занимаемой объектами
         if (listValues.size() % 100_000 == 0) {
             listValues.clear();
         }
@@ -36,23 +34,23 @@ public class Summator {
         someValue += Math.abs(temp) * 3 + listValues.size();
     }
 
-    public Integer getSum() {
+    public int getSum() {  // Возвращаем int вместо Integer
         return sum;
     }
 
-    public Integer getPrevValue() {
+    public int getPrevValue() {  // Возвращаем int вместо Integer
         return prevValue;
     }
 
-    public Integer getPrevPrevValue() {
+    public int getPrevPrevValue() {  // Возвращаем int вместо Integer
         return prevPrevValue;
     }
 
-    public Integer getSumLastThreeValues() {
+    public int getSumLastThreeValues() {  // Возвращаем int вместо Integer
         return sumLastThreeValues;
     }
 
-    public Integer getSomeValue() {
+    public int getSomeValue() {  // Возвращаем int вместо Integer
         return someValue;
     }
 }

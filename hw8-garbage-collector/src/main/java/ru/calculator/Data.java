@@ -1,13 +1,13 @@
 package ru.calculator;
 
 public class Data {
-    private final Integer value;
+    private final int value;  // Заменили Integer на int
 
-    public Data(Integer value) {
+    public Data(int value) {  // Соответственно, конструктор тоже принимает int
         this.value = value;
     }
 
-    public Integer getValue() {
+    public int getValue() {   // Возвращаем int вместо Integer
         return value;
     }
 }
