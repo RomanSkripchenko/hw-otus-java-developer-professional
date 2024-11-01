@@ -5,11 +5,11 @@ import java.util.List;
 import java.util.Random;
 
 public class Summator {
-    private int sum = 0;  // Заменили Integer на int
-    private int prevValue = 0;  // Заменили Integer на int
-    private int prevPrevValue = 0;  // Заменили Integer на int
-    private int sumLastThreeValues = 0;  // Заменили Integer на int
-    private int someValue = 0;  // Заменили Integer на int
+    private int sum = 0; // Заменили Integer на int
+    private int prevValue = 0; // Заменили Integer на int
+    private int prevPrevValue = 0; // Заменили Integer на int
+    private int sumLastThreeValues = 0; // Заменили Integer на int
+    private int someValue = 0; // Заменили Integer на int
     private final List<Data> listValues = new ArrayList<>();
     private final Random random = new Random(10);
 
@@ -34,23 +34,23 @@ public class Summator {
         someValue += Math.abs(temp) * 3 + listValues.size();
     }
 
-    public int getSum() {  // Возвращаем int вместо Integer
+    public int getSum() { // Возвращаем int вместо Integer
         return sum;
     }
 
-    public int getPrevValue() {  // Возвращаем int вместо Integer
+    public int getPrevValue() { // Возвращаем int вместо Integer
         return prevValue;
     }
 
-    public int getPrevPrevValue() {  // Возвращаем int вместо Integer
+    public int getPrevPrevValue() { // Возвращаем int вместо Integer
         return prevPrevValue;
     }
 
-    public int getSumLastThreeValues() {  // Возвращаем int вместо Integer
+    public int getSumLastThreeValues() { // Возвращаем int вместо Integer
         return sumLastThreeValues;
     }
 
-    public int getSomeValue() {  // Возвращаем int вместо Integer
+    public int getSomeValue() { // Возвращаем int вместо Integer
         return someValue;
     }
 }
