@@ -13,7 +13,7 @@ public class TestContainersConfig {
 
         public CustomPostgreSQLContainer() {
             super(IMAGE_VERSION);
-            //this.addFixedExposedPort(5431, 5432); // Привязываем к новому порту
+            // this.addFixedExposedPort(5431, 5432); // Привязываем к новому порту
         }
 
         public static CustomPostgreSQLContainer getInstance() {

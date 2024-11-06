@@ -16,7 +16,6 @@ import org.hibernate.engine.jdbc.spi.JdbcServices;
 import org.hibernate.engine.jdbc.spi.SqlStatementLogger;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import ru.otus.crm.model.Address;
 import ru.otus.crm.model.Client;
@@ -40,7 +39,6 @@ class HomeworkTest {
         sessionFactory.close();
     }
 
-
     @Test
     void testHomeworkRequirementsForTablesCount() {
 
@@ -49,7 +47,6 @@ class HomeworkTest {
                 .toList();
         assertThat(tables).hasSize(3);
     }
-
 
     @Test
     void testHomeworkRequirementsForUpdatesCount() {
@@ -78,7 +75,6 @@ class HomeworkTest {
         }
     }
 
-
     @Test
     void testForHomeworkRequirementsForClientReferences() throws Exception {
         var client = new Client(
@@ -88,7 +84,6 @@ class HomeworkTest {
                 List.of(new Phone(null, "13-555-22"), new Phone(null, "14-666-333")));
         assertThatClientHasCorrectReferences(client);
     }
-
 
     @Test
     void testForHomeworkRequirementsForClonedClientReferences() throws Exception {
