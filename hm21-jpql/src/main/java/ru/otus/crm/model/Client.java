@@ -81,9 +81,19 @@ public class Client implements Cloneable {
 
     @Override
     public Client clone() {
-        return new Client(this.id, this.name, this.address, new ArrayList<>(this.phones));
-    }
+        // Клонируем адрес, чтобы избежать ссылок на оригинальный объект
+        Address clonedAddress = this.address != null ? new Address(this.address.getId(), this.address.getStreet()) : null;
 
+        // Клонируем список телефонов, чтобы сохранить связи
+        List<Phone> clonedPhones = new ArrayList<>();
+        for (Phone phone : this.phones) {
+            Phone clonedPhone = new Phone(phone.getId(), phone.getNumber());
+            clonedPhone.setClient(this);  // Устанавливаем клиента для клонированного телефона
+            clonedPhones.add(clonedPhone);
+        }
+
+        return new Client(this.id, this.name, clonedAddress, clonedPhones);
+    }
     @Override
     public String toString() {
         return "Client{id=" + id + ", name='" + name + "', address=" + address + ", phones=" + phones + "}";
