@@ -9,18 +9,14 @@ public class Phone {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "number")
     private String number;
 
     @ManyToOne
-    @JoinColumn(name = "client_id")
+    @JoinColumn(name = "client_id", nullable = false)
+
     private Client client;
 
     public Phone() {}
-
-    public Phone(String number) {
-        this.number = number;
-    }
 
     public Phone(Long id, String number) {
         this.id = id;
@@ -43,4 +39,9 @@ public class Phone {
     public String toString() {
         return "Phone{id=" + id + ", number='" + number + "'}";
     }
+
+    public void setClient(Client client) {
+        this.client = client;
+    }
+
 }

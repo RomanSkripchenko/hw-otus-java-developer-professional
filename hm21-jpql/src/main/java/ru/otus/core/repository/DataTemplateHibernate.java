@@ -2,7 +2,11 @@ package ru.otus.core.repository;
 
 import java.util.List;
 import java.util.Optional;
+
+import org.hibernate.Hibernate;
 import org.hibernate.Session;
+import ru.otus.crm.model.Client;
+
 
 public class DataTemplateHibernate<T> implements DataTemplate<T> {
 
@@ -14,7 +18,11 @@ public class DataTemplateHibernate<T> implements DataTemplate<T> {
 
     @Override
     public Optional<T> findById(Session session, long id) {
-        return Optional.ofNullable(session.find(clazz, id));
+        T entity = session.find(clazz, id);
+        if (entity instanceof Client client) {
+            Hibernate.initialize(client.getPhones()); // Инициализировать коллекцию phones
+        }
+        return Optional.ofNullable(entity);
     }
 
     @Override
@@ -36,7 +44,9 @@ public class DataTemplateHibernate<T> implements DataTemplate<T> {
 
     @Override
     public T insert(Session session, T object) {
-        session.persist(object);
+
+        session.saveOrUpdate(object);
+
         return object;
     }
 

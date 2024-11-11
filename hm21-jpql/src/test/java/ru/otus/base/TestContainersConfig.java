@@ -13,6 +13,8 @@ public class TestContainersConfig {
 
         public CustomPostgreSQLContainer() {
             super(IMAGE_VERSION);
+            // this.addFixedExposedPort(5431, 5432); // Привязываем к новому порту
+
         }
 
         public static CustomPostgreSQLContainer getInstance() {
@@ -25,7 +27,8 @@ public class TestContainersConfig {
         @Override
         public void start() {
             super.start();
-            var url = container.getJdbcUrl() + "&stringtype=unspecified";
+            var url = container.getJdbcUrl();
+
             System.setProperty("app.datasource.demo-db.jdbcUrl", url);
             System.setProperty("app.datasource.demo-db.username", container.getUsername());
             System.setProperty("app.datasource.demo-db.password", container.getPassword());

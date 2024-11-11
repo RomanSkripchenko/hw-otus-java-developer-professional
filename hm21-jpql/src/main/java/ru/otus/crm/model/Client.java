@@ -12,47 +12,40 @@ public class Client implements Cloneable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "name")
     private String name;
 
-    @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     @JoinColumn(name = "address_id")
     private Address address;
 
-    @OneToMany(mappedBy = "client", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "client", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
     private List<Phone> phones = new ArrayList<>();
-
-    // Конструктор по умолчанию
     public Client() {}
 
-    // Конструктор с параметром имени
-    public Client(String name) {
-        this.name = name;
-        this.address = null; // По умолчанию, null
-        this.phones = new ArrayList<>(); // Пустой список телефонов
-    }
-
-    // Конструктор с параметрами id и name (для обновления)
-    public Client(Long id, String name) {
-        this.id = id;
-        this.name = name;
-    }
-
-    // Изменение конструктора с параметрами name, address и phones
-    public Client(String name, Address address, List<Phone> phones) {
-        this.name = name;
-        this.address = address;
-        this.phones = phones != null ? phones : new ArrayList<>(); // Проверка на null
-    }
-
-    // Обновление конструктора с параметрами id, name, address и phones
     public Client(Long id, String name, Address address, List<Phone> phones) {
         this.id = id;
         this.name = name;
         this.address = address;
-        this.phones = phones != null ? phones : new ArrayList<>(); // Проверка на null
+        this.phones = phones;
+
+        // Устанавливаем ссылку на клиента для каждого телефона
+        if (phones != null) {
+            phones.forEach(phone -> phone.setClient(this));
+        }
     }
 
+    public Client(String name) {
+        this.name = name;
+        this.address = null;
+        this.phones = new ArrayList<>();
+    }
+
+    public Client(Long id, String name) {
+        this.id = id;
+        this.name = name;
+        this.address = null;
+        this.phones = new ArrayList<>();
+    }
 
 
     // Геттеры и сеттеры
@@ -90,11 +83,28 @@ public class Client implements Cloneable {
 
     @Override
     public Client clone() {
-        return new Client(this.name, this.address, new ArrayList<>(this.phones));
+        // Клонируем адрес, чтобы избежать ссылок на оригинальный объект
+        Address clonedAddress = this.address != null ? new Address(this.address.getId(), this.address.getStreet()) : null;
+
+        // Клонируем список телефонов, чтобы сохранить связи
+        List<Phone> clonedPhones = new ArrayList<>();
+        for (Phone phone : this.phones) {
+            Phone clonedPhone = new Phone(phone.getId(), phone.getNumber());
+            clonedPhone.setClient(this);  // Устанавливаем клиента для клонированного телефона
+            clonedPhones.add(clonedPhone);
+        }
+
+        return new Client(this.id, this.name, clonedAddress, clonedPhones);
     }
 
     @Override
     public String toString() {
         return "Client{id=" + id + ", name='" + name + "', address=" + address + ", phones=" + phones + "}";
     }
+
+    public void addPhone(Phone phone) {
+        phone.setClient(this); // Устанавливает связь клиента и телефона
+        phones.add(phone);      // Добавляет телефон в коллекцию телефонов клиента
+    }
+
 }

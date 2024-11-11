@@ -9,15 +9,9 @@ public class Address {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "street")
     private String street;
 
     public Address() {}
-
-    public Address(String street) {
-        this.street = street;
-    }
-
 
     public Address(Long id, String street) {
         this.id = id;
