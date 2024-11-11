@@ -18,5 +18,6 @@
     <property name="hibernate.hbm2ddl.auto">update</property>
     <property name="hibernate.enable_lazy_load_no_trans">true</property>
 
+
   </session-factory>
 </hibernate-configuration>

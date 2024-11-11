@@ -51,13 +51,16 @@ public abstract class AbstractHibernateTest {
         migrationsExecutor.executeMigrations();
 
         // Настраиваем Hibernate
+
         Configuration configuration = new Configuration().configure(HIBERNATE_CFG_FILE);
         configuration.setProperty("hibernate.connection.url", dbUrl);
         configuration.setProperty("hibernate.connection.username", dbUserName);
         configuration.setProperty("hibernate.connection.password", dbPassword);
+
         configuration.setProperty("hibernate.enable_lazy_load_no_trans", "true"); // Позволяет ленивую загрузку вне транзакции
 
         sessionFactory = HibernateUtils.buildSessionFactory(configuration, Client.class, Address.class, Phone.class);
+
 
         transactionManager = new TransactionManagerHibernate(sessionFactory);
         clientTemplate = new DataTemplateHibernate<>(Client.class);
@@ -69,10 +72,12 @@ public abstract class AbstractHibernateTest {
         return stats.getEntityStatistics(Client.class.getName());
     }
 
+
     protected Client initializeClientAssociations(Client client) {
         // Принудительная инициализация связанных коллекций
         Hibernate.initialize(client.getPhones());
         Hibernate.initialize(client.getAddress());
         return client;
     }
+
 }

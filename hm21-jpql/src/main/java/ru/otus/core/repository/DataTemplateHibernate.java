@@ -7,6 +7,7 @@ import org.hibernate.Hibernate;
 import org.hibernate.Session;
 import ru.otus.crm.model.Client;
 
+
 public class DataTemplateHibernate<T> implements DataTemplate<T> {
 
     private final Class<T> clazz;
@@ -23,6 +24,7 @@ public class DataTemplateHibernate<T> implements DataTemplate<T> {
         }
         return Optional.ofNullable(entity);
     }
+
     @Override
     public List<T> findByEntityField(Session session, String entityFieldName, Object entityFieldValue) {
         var criteriaBuilder = session.getCriteriaBuilder();
@@ -42,7 +44,9 @@ public class DataTemplateHibernate<T> implements DataTemplate<T> {
 
     @Override
     public T insert(Session session, T object) {
+
         session.saveOrUpdate(object);
+
         return object;
     }
 

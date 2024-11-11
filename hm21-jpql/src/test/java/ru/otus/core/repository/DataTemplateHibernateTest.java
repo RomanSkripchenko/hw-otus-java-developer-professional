@@ -29,6 +29,7 @@ class DataTemplateHibernateTest extends AbstractHibernateTest {
                 new Address(null, "AnyStreet"),
                 List.of(new Phone(null, "13-555-22"), new Phone(null, "14-666-333")));
 
+
         // when
         Client finalClient = client;
         var savedClient = transactionManager.doInTransaction(session -> {

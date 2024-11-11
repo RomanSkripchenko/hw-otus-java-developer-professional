@@ -7,6 +7,7 @@ import java.util.List;
 @Entity
 @Table(name = "client")
 public class Client implements Cloneable {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -45,6 +46,7 @@ public class Client implements Cloneable {
         this.address = null;
         this.phones = new ArrayList<>();
     }
+
 
     // Геттеры и сеттеры
     public Long getId() {
@@ -94,6 +96,7 @@ public class Client implements Cloneable {
 
         return new Client(this.id, this.name, clonedAddress, clonedPhones);
     }
+
     @Override
     public String toString() {
         return "Client{id=" + id + ", name='" + name + "', address=" + address + ", phones=" + phones + "}";
@@ -103,4 +106,5 @@ public class Client implements Cloneable {
         phone.setClient(this); // Устанавливает связь клиента и телефона
         phones.add(phone);      // Добавляет телефон в коллекцию телефонов клиента
     }
+
 }
