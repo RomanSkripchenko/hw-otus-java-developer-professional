@@ -13,23 +13,38 @@ public class AlternatingNumberPrinter {
 
     public void printNumbers(int threadNumber) {
         int limit = 10;
-        int repetitions = 3; // Сколько раз каждый поток должен выполнить последовательность
-        for (int r = 0; r < repetitions; r++) {
+        int number = 1;
+        boolean ascending = true;
+
+        while (true) {
             synchronized (lock) {
                 while ((threadNumber == 1 && !isThread1Turn) || (threadNumber == 2 && isThread1Turn)) {
                     try {
                         lock.wait();
                     } catch (InterruptedException e) {
                         Thread.currentThread().interrupt();
+                        return;
                     }
                 }
 
-                // Печать последовательности чисел
-                for (int i = 1; i <= limit; i++) {
-                    System.out.println(Thread.currentThread().getName() + ": " + i);
-                }
-                for (int i = limit - 1; i >= 1; i--) {
-                    System.out.println(Thread.currentThread().getName() + ": " + i);
+                // Печать текущего числа
+                System.out.println(Thread.currentThread().getName() + ": " + number);
+
+                // Изменение числа
+                if (ascending) {
+                    if (number < limit) {
+                        number++;
+                    } else {
+                        ascending = false;
+                        number--;
+                    }
+                } else {
+                    if (number > 1) {
+                        number--;
+                    } else {
+                        ascending = true;
+                        number++;
+                    }
                 }
 
                 // Передача очереди другому потоку
