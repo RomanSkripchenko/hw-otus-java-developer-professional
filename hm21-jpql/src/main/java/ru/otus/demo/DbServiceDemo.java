@@ -7,7 +7,7 @@ import ru.otus.core.repository.DataTemplateHibernate;
 import ru.otus.core.repository.HibernateUtils;
 import ru.otus.core.sessionmanager.TransactionManagerHibernate;
 import ru.otus.crm.dbmigrations.MigrationsExecutorFlyway;
-import ru.otus.crm.model.Client;
+import ru.otus.crm.model.*;
 import ru.otus.crm.service.DbServiceClientImpl;
 
 public class DbServiceDemo {
@@ -17,36 +17,32 @@ public class DbServiceDemo {
     public static final String HIBERNATE_CFG_FILE = "hibernate.cfg.xml";
 
     public static void main(String[] args) {
-        var configuration = new Configuration().configure(HIBERNATE_CFG_FILE);
+        try {
+            var configuration = new Configuration().configure(HIBERNATE_CFG_FILE);
+            var dbUrl = configuration.getProperty("hibernate.connection.url");
+            var dbUserName = configuration.getProperty("hibernate.connection.username");
+            var dbPassword = configuration.getProperty("hibernate.connection.password");
 
-        var dbUrl = configuration.getProperty("hibernate.connection.url");
-        var dbUserName = configuration.getProperty("hibernate.connection.username");
-        var dbPassword = configuration.getProperty("hibernate.connection.password");
+            new MigrationsExecutorFlyway(dbUrl, dbUserName, dbPassword).executeMigrations();
 
-        new MigrationsExecutorFlyway(dbUrl, dbUserName, dbPassword).executeMigrations();
+            //var sessionFactory = HibernateUtils.buildSessionFactory(configuration, Client.class);
 
-        var sessionFactory = HibernateUtils.buildSessionFactory(configuration, Client.class);
+            var sessionFactory = HibernateUtils.buildSessionFactory(
+                    configuration,
+                    Client.class,
+                    Address.class,
+                    Phone.class // добавляем связанные сущности
+            );
 
-        var transactionManager = new TransactionManagerHibernate(sessionFactory);
-        ///
-        var clientTemplate = new DataTemplateHibernate<>(Client.class);
-        ///
-        var dbServiceClient = new DbServiceClientImpl(transactionManager, clientTemplate);
-        dbServiceClient.saveClient(new Client("dbServiceFirst"));
+            var transactionManager = new TransactionManagerHibernate(sessionFactory);
+            var clientTemplate = new DataTemplateHibernate<>(Client.class);
+            var dbServiceClient = new DbServiceClientImpl(transactionManager, clientTemplate);
 
-        var clientSecond = dbServiceClient.saveClient(new Client("dbServiceSecond"));
-        var clientSecondSelected = dbServiceClient
-                .getClient(clientSecond.getId())
-                .orElseThrow(() -> new RuntimeException("Client not found, id:" + clientSecond.getId()));
-        log.info("clientSecondSelected:{}", clientSecondSelected);
-        ///
-        dbServiceClient.saveClient(new Client(clientSecondSelected.getId(), "dbServiceSecondUpdated"));
-        var clientUpdated = dbServiceClient
-                .getClient(clientSecondSelected.getId())
-                .orElseThrow(() -> new RuntimeException("Client not found, id:" + clientSecondSelected.getId()));
-        log.info("clientUpdated:{}", clientUpdated);
+            dbServiceClient.saveClient(new Client("dbServiceFirst"));
 
-        log.info("All clients");
-        dbServiceClient.findAll().forEach(client -> log.info("client:{}", client));
+            System.out.println("Initialization completed successfully.");
+        } catch (Exception e) {
+            e.printStackTrace(); // Вывод полного стека ошибки в консоль
+        }
     }
 }

@@ -3,16 +3,26 @@
 
   <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
     <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
-      <Pattern>%d{yyyy-MM-dd_HH:mm:ss.SSS} %-5level %logger{36} - %msg%n
-      </Pattern>
+      <Pattern>%d{yyyy-MM-dd_HH:mm:ss.SSS} %-5level %logger{36} - %msg%n</Pattern>
     </encoder>
   </appender>
 
-  <logger name="org.hibernate" level="ERROR"/>
-  <logger name="ch.qos.logback" level="ERROR"/>
+  <appender name="FILE" class="ch.qos.logback.core.FileAppender">
+    <file>application.log</file> <!-- Логи будут сохраняться в этот файл -->
+    <encoder>
+      <pattern>%d{yyyy-MM-dd HH:mm:ss} [%thread] %-5level %logger{36} - %msg%n</pattern>
+    </encoder>
+  </appender>
 
-  <root level="INFO">
+  <!-- Настройка логов для Hibernate -->
+  <logger name="org.hibernate" level="DEBUG" />
+  <logger name="org.hibernate.SQL" level="DEBUG" />
+  <logger name="org.hibernate.type.descriptor.sql" level="TRACE" />
+
+  <!-- Корневой логгер -->
+  <root level="DEBUG">
     <appender-ref ref="STDOUT"/>
+    <appender-ref ref="FILE"/>
   </root>
 
 </configuration>

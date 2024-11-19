@@ -2,20 +2,20 @@ package server;
 
 import com.google.gson.Gson;
 import dao.UserDao;
-import helpers.FileSystemHelper;
+import jakarta.servlet.http.HttpServlet;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import org.eclipse.jetty.ee10.servlet.ServletContextHandler;
 import org.eclipse.jetty.ee10.servlet.ServletHolder;
 import org.eclipse.jetty.server.Handler;
 import org.eclipse.jetty.server.Server;
-import org.eclipse.jetty.server.handler.ResourceHandler;
 import services.TemplateProcessor;
 import servlet.UsersApiServlet;
 import servlet.UsersServlet;
 
-public class UsersWebServerSimple implements UsersWebServer {
-    private static final String START_PAGE_NAME = "index.html";
-    private static final String COMMON_RESOURCES_DIR = "static";
+import java.io.IOException;
 
+public class UsersWebServerSimple implements UsersWebServer {
     private final UserDao userDao;
     private final Gson gson;
     protected final TemplateProcessor templateProcessor;
@@ -47,13 +47,10 @@ public class UsersWebServerSimple implements UsersWebServer {
     }
 
     private void initContext() {
-
-        ResourceHandler resourceHandler = createResourceHandler();
         ServletContextHandler servletContextHandler = createServletContextHandler();
 
         Handler.Sequence sequence = new Handler.Sequence();
-        sequence.addHandler(resourceHandler);
-        sequence.addHandler(applySecurity(servletContextHandler, "/users", "/api/user/*"));
+        sequence.addHandler(applySecurity(servletContextHandler, "/users", "/api/user/*", "/"));
 
         server.setHandler(sequence);
     }
@@ -63,19 +60,21 @@ public class UsersWebServerSimple implements UsersWebServer {
         return servletContextHandler;
     }
 
-    private ResourceHandler createResourceHandler() {
-        ResourceHandler resourceHandler = new ResourceHandler();
-        resourceHandler.setDirAllowed(false);
-        resourceHandler.setWelcomeFiles(START_PAGE_NAME);
-        resourceHandler.setBaseResourceAsString(
-                FileSystemHelper.localFileNameOrResourceNameToFullPath(COMMON_RESOURCES_DIR));
-        return resourceHandler;
-    }
-
     private ServletContextHandler createServletContextHandler() {
         ServletContextHandler servletContextHandler = new ServletContextHandler(ServletContextHandler.SESSIONS);
+
+        // Перенаправление с "/" на "/login"
+        servletContextHandler.addServlet(new ServletHolder(new HttpServlet() {
+            @Override
+            protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws IOException {
+                resp.sendRedirect("/login");
+            }
+        }), "/");
+
+        // Добавление сервлетов
         servletContextHandler.addServlet(new ServletHolder(new UsersServlet(templateProcessor, userDao)), "/users");
         servletContextHandler.addServlet(new ServletHolder(new UsersApiServlet(userDao, gson)), "/api/user/*");
+
         return servletContextHandler;
     }
 }

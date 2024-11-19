@@ -6,7 +6,9 @@ import org.hibernate.cfg.Configuration;
 import ru.otus.core.repository.DataTemplateHibernate;
 import ru.otus.core.repository.HibernateUtils;
 import ru.otus.core.sessionmanager.TransactionManagerHibernate;
+import ru.otus.crm.model.Address;
 import ru.otus.crm.model.Client;
+import ru.otus.crm.model.Phone;
 import ru.otus.crm.service.DBServiceClient;
 import ru.otus.crm.service.DbServiceClientImpl;
 import server.WebServerWithFilterBasedSecurity;
@@ -26,7 +28,13 @@ public class WebServerApp {
 
         // Настроим Hibernate
         Configuration configuration = new Configuration().configure("hibernate.cfg.xml");
-        var sessionFactory = HibernateUtils.buildSessionFactory(configuration, Client.class);
+
+        var sessionFactory = HibernateUtils.buildSessionFactory(
+                configuration,
+                Client.class,
+                Address.class, // Добавляем Address
+                Phone.class    // Добавляем Phone
+        );
         var transactionManager = new TransactionManagerHibernate(sessionFactory);
 
         // Настроим сервисы
