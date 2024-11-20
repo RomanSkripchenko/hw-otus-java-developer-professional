@@ -16,7 +16,7 @@ pluginManagement {
         id("com.github.johnrengelman.shadow") version johnrengelmanShadow
         id("com.google.cloud.tools.jib") version jib
         id("com.google.protobuf") version protobufVer
-        id("name.remal.sonarlint") version sonarlint
+       // id("name.remal.sonarlint") version sonarlint
         id("com.diffplug.spotless") version spotless
     }
 }
@@ -39,4 +39,7 @@ include("hm16-io")
 include("hm15-structural-patterns")
 include("hm16-io")
 include("hw8-garbage-collector")
-
+include("hm24-webServer")
+include("hm31-executors")
+include("hm33-concurrentCollections")
+include("hm34-multiprocess")
