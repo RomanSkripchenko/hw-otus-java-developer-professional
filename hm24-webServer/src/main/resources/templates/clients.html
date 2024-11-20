@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Clients</title>
+</head>
+<body>
+<h1>Clients</h1>
+<ul>
+    <#list clients as client>
+    <li>${client.name}</li>
+</#list>
+</ul>
+<form method="post" action="/clients">
+    <label for="name">Client name:</label>
+    <input type="text" name="name" id="name" required>
+    <button type="submit">Add Client</button>
+</form>
+</body>
+</html>

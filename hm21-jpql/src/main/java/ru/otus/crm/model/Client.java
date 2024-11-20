@@ -20,6 +20,7 @@ public class Client implements Cloneable {
 
     @OneToMany(mappedBy = "client", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
     private List<Phone> phones = new ArrayList<>();
+
     public Client() {}
 
     public Client(Long id, String name, Address address, List<Phone> phones) {
@@ -46,7 +47,6 @@ public class Client implements Cloneable {
         this.address = null;
         this.phones = new ArrayList<>();
     }
-
 
     // Геттеры и сеттеры
     public Long getId() {
@@ -84,13 +84,14 @@ public class Client implements Cloneable {
     @Override
     public Client clone() {
         // Клонируем адрес, чтобы избежать ссылок на оригинальный объект
-        Address clonedAddress = this.address != null ? new Address(this.address.getId(), this.address.getStreet()) : null;
+        Address clonedAddress =
+                this.address != null ? new Address(this.address.getId(), this.address.getStreet()) : null;
 
         // Клонируем список телефонов, чтобы сохранить связи
         List<Phone> clonedPhones = new ArrayList<>();
         for (Phone phone : this.phones) {
             Phone clonedPhone = new Phone(phone.getId(), phone.getNumber());
-            clonedPhone.setClient(this);  // Устанавливаем клиента для клонированного телефона
+            clonedPhone.setClient(this); // Устанавливаем клиента для клонированного телефона
             clonedPhones.add(clonedPhone);
         }
 
@@ -104,7 +105,6 @@ public class Client implements Cloneable {
 
     public void addPhone(Phone phone) {
         phone.setClient(this); // Устанавливает связь клиента и телефона
-        phones.add(phone);      // Добавляет телефон в коллекцию телефонов клиента
+        phones.add(phone); // Добавляет телефон в коллекцию телефонов клиента
     }
-
 }
