@@ -36,14 +36,15 @@ public class SensorDataProcessorBuffered implements SensorDataProcessor {
         flush();
     }
 
-    public synchronized void flush() {
+    protected synchronized void flush() {
         if (buffer.isEmpty()) {
             return;
         }
 
         try {
-            buffer.sort(Comparator.comparing(SensorData::getMeasurementTime));
-            writer.writeBufferedData(new ArrayList<>(buffer));
+            List<SensorData> sortedBuffer = new ArrayList<>(buffer);
+            sortedBuffer.sort(Comparator.comparing(SensorData::getMeasurementTime));
+            writer.writeBufferedData(sortedBuffer);
             buffer.clear();
         } catch (Exception e) {
             log.error("Ошибка в процессе записи буфера", e);
