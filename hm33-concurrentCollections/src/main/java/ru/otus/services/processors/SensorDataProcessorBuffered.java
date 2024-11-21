@@ -1,4 +1,5 @@
 package ru.otus.services.processors;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import ru.otus.api.SensorDataProcessor;
@@ -7,6 +8,7 @@ import ru.otus.lib.SensorDataBufferedWriter;
 
 import java.util.ArrayList;
 import java.util.Comparator;
+import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.PriorityBlockingQueue;
 
 public class SensorDataProcessorBuffered implements SensorDataProcessor {
@@ -14,7 +16,10 @@ public class SensorDataProcessorBuffered implements SensorDataProcessor {
 
     private final int bufferSize;
     private final SensorDataBufferedWriter writer;
-    private final PriorityBlockingQueue<SensorData> buffer;
+    private final BlockingQueue<SensorData> buffer;
+
+    // Синхронизация на уровне объекта для управления flush
+    private final Object flushLock = new Object();
 
     public SensorDataProcessorBuffered(int bufferSize, SensorDataBufferedWriter writer) {
         this.bufferSize = bufferSize;
@@ -37,17 +42,18 @@ public class SensorDataProcessorBuffered implements SensorDataProcessor {
     }
 
     protected void flush() {
-        if (buffer.isEmpty()) {
-            return;
-        }
+        synchronized (flushLock) {
+            if (buffer.isEmpty()) {
+                return;
+            }
 
-        try {
-            var flushedData = new ArrayList<SensorData>();
-            buffer.drainTo(flushedData);
-            writer.writeBufferedData(flushedData);
-        } catch (Exception e) {
-            log.error("Ошибка в процессе записи буфера", e);
+            try {
+                var flushedData = new ArrayList<SensorData>();
+                buffer.drainTo(flushedData);
+                writer.writeBufferedData(flushedData);
+            } catch (Exception e) {
+                log.error("Ошибка в процессе записи буфера", e);
+            }
         }
     }
 }
-
