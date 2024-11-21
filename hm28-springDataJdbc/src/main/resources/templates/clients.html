@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Clients</title>
+</head>
+<body>
+<h1>Clients</h1>
+<ul>
+    <li th:each="client : ${clients}" th:text="${client.name}">Client Name</li>
+</ul>
+<form method="post" action="/clients">
+    <label for="name">Client name:</label>
+    <input type="text" name="name" id="name" required>
+    <button type="submit">Add Client</button>
+</form>
+</body>
+</html>
