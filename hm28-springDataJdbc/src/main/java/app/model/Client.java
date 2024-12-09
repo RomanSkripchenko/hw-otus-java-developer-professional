@@ -4,7 +4,9 @@ import java.util.ArrayList;
 import java.util.List;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.relational.core.mapping.MappedCollection;
+import org.springframework.data.relational.core.mapping.Table;
 
+@Table("client")
 public class Client {
     @Id
     private Long id;
@@ -13,9 +15,9 @@ public class Client {
 
     @MappedCollection(idColumn = "client_id")
     private List<Phone> phones = new ArrayList<>();
-
-    private Address address;
-
+    /*
+        private Address address;
+    */
     // Конструктор по умолчанию
     public Client() {}
 
@@ -24,7 +26,7 @@ public class Client {
         this.id = id;
         this.name = name;
         this.phones = phones;
-        this.address = address;
+        // this.address = address;
     }
 
     // Геттеры и сеттеры
@@ -51,12 +53,12 @@ public class Client {
     public void setPhones(List<Phone> phones) {
         this.phones = phones;
     }
-
+    /*
     public Address getAddress() {
         return address;
     }
 
     public void setAddress(Address address) {
         this.address = address;
-    }
+    }*/
 }

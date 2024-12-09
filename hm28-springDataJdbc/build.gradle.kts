@@ -1,7 +1,8 @@
 plugins {
-    id("org.springframework.boot") // Версия берётся из корневого проекта (3.3.1)
-    id("io.spring.dependency-management") // Версия берётся из корневого проекта
+    id("org.springframework.boot") version "3.3.1" // Указана версия Spring Boot
+    id("io.spring.dependency-management") // Убираем явную версию плагина, так как она уже в classpath
     kotlin("jvm") version "1.8.21" // Указываем версию Kotlin
+    id("org.flywaydb.flyway") version "9.22.1" // Указана версия Flyway
 }
 
 group = "ru.otus"
@@ -19,7 +20,7 @@ dependencies {
     implementation("org.springframework.boot:spring-boot-starter-data-jdbc") // Для Spring Data JDBC
 
     // Зависимость для работы с PostgreSQL
-    implementation("org.postgresql:postgresql:42.6.0") // Указана последняя стабильная версия
+    implementation("org.postgresql:postgresql:42.6.0") // Указана последняя стабильная версия PostgreSQL
 
     // Для управления миграциями базы данных
     implementation("org.flywaydb:flyway-core:9.22.1") // Указана последняя версия Flyway
@@ -32,4 +33,19 @@ dependencies {
 
 tasks.test {
     useJUnitPlatform() // Указываем JUnit Platform для тестов
+}
+
+task("wrapper", type = Wrapper::class) {
+    gradleVersion = "8.8" // Указание версии Gradle
+    distributionType = Wrapper.DistributionType.ALL
+}
+
+flyway {
+    url = "jdbc:postgresql://localhost:5430/demoDB?currentSchema=my_schema"
+    user = "usr"
+    password = "pwd"
+    locations = arrayOf("classpath:db/migration") // Путь до папки миграций
+    schemas = arrayOf("my_schema") // Указываем схему для миграций
+    cleanDisabled = false // Разрешаем выполнение команды clean
+    baselineOnMigrate = true // Включаем базовую миграцию
 }

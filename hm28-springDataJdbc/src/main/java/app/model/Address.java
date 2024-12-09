@@ -1,6 +1,7 @@
 package app.model;
 
 import org.springframework.data.annotation.Id;
+import org.springframework.data.relational.core.mapping.Column;
 import org.springframework.data.relational.core.mapping.Table;
 
 @Table("address")
@@ -10,6 +11,7 @@ public class Address {
 
     private String street;
 
+    @Column("client_id")
     private Long clientId; // Внешний ключ для связи с клиентом
 
     public Address() {}
