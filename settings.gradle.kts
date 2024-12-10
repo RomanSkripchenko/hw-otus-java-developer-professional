@@ -43,3 +43,8 @@ include("hm24-webServer")
 include("hm31-executors")
 include("hm33-concurrentCollections")
 include("hm34-multiprocess")
+include("hm-38-webflux-chat")
+include("hm-38-webflux-chat:client-service")
+findProject(":hm-38-webflux-chat:client-service")?.name = "client-service"
+include("hm-38-webflux-chat:datastore-service")
+findProject(":hm-38-webflux-chat:datastore-service")?.name = "datastore-service"
