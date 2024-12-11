@@ -39,8 +39,12 @@ const disconnect = () => {
 
 const sendMsg = () => {
     const roomId = document.getElementById(roomIdElementId).value;
+    if (roomId === "1408") {
+        alert("Вы не можете отправлять сообщения в комнату 1408.");
+        return;
+    }
     const message = document.getElementById(messageElementId).value;
-    stompClient.send(`/app/message.${roomId}`, {}, JSON.stringify({'messageStr': message}))
+    stompClient.send(`/app/message.${roomId}`, {}, JSON.stringify({'messageStr': message}));
 }
 
 const showMessage = (message) => {

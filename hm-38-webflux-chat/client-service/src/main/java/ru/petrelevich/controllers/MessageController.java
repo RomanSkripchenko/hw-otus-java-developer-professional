@@ -33,18 +33,23 @@ public class MessageController {
 
     @MessageMapping("/message.{roomId}")
     public void getMessage(@DestinationVariable("roomId") String roomId, Message message) {
-        if (!"1408".equals(roomId)) {
-            saveMessage(roomId, message).subscribe(msgId -> logger.info("Message saved with ID: {}", msgId));
-            template.convertAndSend(
-                    String.format("%s%s", TOPIC_TEMPLATE, roomId),
-                    new Message(HtmlUtils.htmlEscape(message.messageStr())));
+        if ("1408".equals(roomId)) {
+            throw new ChatException("Нельзя отправлять сообщения в комнату 1408.");
         }
+
+        saveMessage(roomId, message).subscribe(msgId -> logger.info("Message saved with ID: {}", msgId));
+        template.convertAndSend(
+                String.format("%s%s", TOPIC_TEMPLATE, roomId),
+                new Message(HtmlUtils.htmlEscape(message.messageStr()))
+        );
 
         // Отправка сообщения в комнату 1408
         saveMessage("1408", message)
-                .subscribe(msgId -> logger.info("Message also sent to Room 1408 with ID: {}", msgId));
+                .subscribe(msgId -> logger.info("Message также отправлено в комнату 1408 с ID: {}", msgId));
         template.convertAndSend(
-                String.format("%s%s", TOPIC_TEMPLATE, "1408"), new Message(HtmlUtils.htmlEscape(message.messageStr())));
+                String.format("%s%s", TOPIC_TEMPLATE, "1408"),
+                new Message(HtmlUtils.htmlEscape(message.messageStr()))
+        );
     }
 
     @EventListener
@@ -52,31 +57,27 @@ public class MessageController {
         var genericMessage = (GenericMessage<byte[]>) event.getMessage();
         var simpDestination = (String) genericMessage.getHeaders().get("simpDestination");
         if (simpDestination == null) {
-            logger.error("Can not get simpDestination header, headers:{}", genericMessage.getHeaders());
-            throw new ChatException("Can not get simpDestination header");
+            logger.error("Не удалось получить заголовок simpDestination, headers:{}", genericMessage.getHeaders());
+            throw new ChatException("Не удалось получить заголовок simpDestination");
         }
+
         if (!simpDestination.startsWith(template.getUserDestinationPrefix())) {
             return;
         }
+
         var roomId = parseRoomId(simpDestination);
-        logger.info("subscription for:{}, roomId:{}", simpDestination, roomId);
-        /*
-        /user/3c3416b8-9b24-4c75-b38f-7c96953381d1/topic/response.1
-         */
+        logger.info("Подписка на:{}, roomId:{}", simpDestination, roomId);
+
         if ("1408".equals(roomId)) {
-            logger.info("User subscribed to Room 1408");
+            logger.info("Пользователь подписался на комнату 1408");
             getAllMessages()
-                    .doOnError(ex -> logger.error("Failed to load messages for Room 1408", ex))
+                    .doOnError(ex -> logger.error("Ошибка загрузки сообщений для комнаты 1408", ex))
                     .subscribe(message -> template.convertAndSend(simpDestination, message));
         } else {
             getMessagesByRoomId(roomId)
-                    .doOnError(ex -> logger.error("Failed to load messages for Room ID: {}", roomId, ex))
+                    .doOnError(ex -> logger.error("Ошибка загрузки сообщений для комнаты: {}", roomId, ex))
                     .subscribe(message -> template.convertAndSend(simpDestination, message));
         }
-
-        getMessagesByRoomId(roomId)
-                .doOnError(ex -> logger.error("getting messages for roomId:{} failed", roomId, ex))
-                .subscribe(message -> template.convertAndSend(simpDestination, message));
     }
 
     private Flux<Message> getAllMessages() {
