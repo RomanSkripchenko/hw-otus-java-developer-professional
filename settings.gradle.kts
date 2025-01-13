@@ -48,3 +48,4 @@ include("hm-38-webflux-chat:client-service")
 findProject(":hm-38-webflux-chat:client-service")?.name = "client-service"
 include("hm-38-webflux-chat:datastore-service")
 findProject(":hm-38-webflux-chat:datastore-service")?.name = "datastore-service"
+
