@@ -2,11 +2,9 @@ package ru.otus.core.repository;
 
 import java.util.List;
 import java.util.Optional;
-
 import org.hibernate.Hibernate;
 import org.hibernate.Session;
 import ru.otus.crm.model.Client;
-
 
 public class DataTemplateHibernate<T> implements DataTemplate<T> {
 

@@ -13,7 +13,6 @@ public class Phone {
 
     @ManyToOne
     @JoinColumn(name = "client_id", nullable = false)
-
     private Client client;
 
     public Phone() {}
@@ -43,5 +42,4 @@ public class Phone {
     public void setClient(Client client) {
         this.client = client;
     }
-
 }

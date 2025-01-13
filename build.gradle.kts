@@ -7,7 +7,7 @@ plugins {
     id("fr.brouillard.oss.gradle.jgitver")
     id("io.spring.dependency-management")
     id("org.springframework.boot") apply false
-    id("name.remal.sonarlint") apply false
+    //id("name.remal.sonarlint") apply false
     id("com.diffplug.spotless") apply false
 }
 
@@ -55,10 +55,10 @@ allprojects {
             force("commons-lang:commons-lang:2.5")
             force("org.codehaus.jackson:jackson-core-asl:1.8.8")
             force("org.codehaus.jackson:jackson-mapper-asl:1.8.8")
-            force("org.sonarsource.analyzer-commons:sonar-analyzer-commons:2.8.0.2699")
-            force("org.sonarsource.analyzer-commons:sonar-xml-parsing:2.8.0.2699")
-            force("org.sonarsource.sslr:sslr-core:1.24.0.633")
-            force("org.sonarsource.analyzer-commons:sonar-analyzer-recognizers:2.8.0.2699")
+            //force("org.sonarsource.analyzer-commons:sonar-analyzer-commons:2.8.0.2699")
+           // force("org.sonarsource.analyzer-commons:sonar-xml-parsing:2.8.0.2699")
+            //force("org.sonarsource.sslr:sslr-core:1.24.0.633")
+           // force("org.sonarsource.analyzer-commons:sonar-analyzer-recognizers:2.8.0.2699")
             force("com.google.code.findbugs:jsr305:3.0.2")
             force("commons-io:commons-io:2.15.1")
             force("com.google.errorprone:error_prone_annotations:2.26.1")
@@ -79,7 +79,7 @@ subprojects {
         options.compilerArgs.addAll(listOf("-Xlint:all,-serial,-processing"))
     }
 
-    apply<name.remal.gradle_plugins.sonarlint.SonarLintPlugin>()
+    //apply<name.remal.gradle_plugins.sonarlint.SonarLintPlugin>()
     apply<com.diffplug.gradle.spotless.SpotlessPlugin>()
     configure<com.diffplug.gradle.spotless.SpotlessExtension> {
         java {

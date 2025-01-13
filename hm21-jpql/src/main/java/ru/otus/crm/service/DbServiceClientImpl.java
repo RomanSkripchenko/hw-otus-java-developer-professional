@@ -24,7 +24,6 @@ public class DbServiceClientImpl implements DBServiceClient {
         // Установить ссылку на клиента в каждом телефоне
         client.getPhones().forEach(phone -> phone.setClient(client));
 
-
         return transactionManager.doInTransaction(session -> {
             var clientCloned = client.clone();
             if (client.getId() == null) {
